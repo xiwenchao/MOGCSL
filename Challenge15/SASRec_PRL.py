@@ -130,14 +130,7 @@ class SASRec_PRLnetwork:
                                                causality=False,
                                                scope="self_attention_rl",
                                                # reuse=tf.AUTO_REUSE
-                                            )
-
-                # Feed forward
-                # self.seq = feedforward(normalize(self.seq), num_units=[self.hidden_size, self.hidden_size],
-                #                        dropout_rate=args.dropout_rate,
-                #                        is_training=self.is_training)
-
-        
+                                            )       
         s = tf.layers.dense(tf.transpose(self.stack, [0, 2, 1]), 1, activation=tf.nn.relu, name="dense_0")   # with(out) relu
         self.state_final = tf.squeeze(s, axis=-1, name="state_final")
 

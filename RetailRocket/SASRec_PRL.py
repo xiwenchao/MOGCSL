@@ -130,24 +130,10 @@ class SASRec_PRLnetwork:
                                                scope="self_attention_rl",
                                                # reuse=tf.AUTO_REUSE
                                             )
-
-                # Feed forward
-                # self.seq = feedforward(normalize(self.seq), num_units=[self.hidden_size, self.hidden_size],
-                #                        dropout_rate=args.dropout_rate,
-                #                        is_training=self.is_training)
-
-        # self.stack = normalize(self.stack)
-
-        # s, t, r = tf.unstack(self.stack, axis=1)
-        # self.state_final = s
-        # self.state_final=tf.reduce_mean(self.seq,axis=1)
-
         s = tf.layers.dense(tf.transpose(self.stack, [0, 2, 1]), 1, activation=tf.nn.relu, name="dense_0")   # with(out) relu
         self.state_final = tf.squeeze(s, axis=-1, name="state_final")
-
         output = tf.contrib.layers.fully_connected(self.state_final, self.item_num, activation_fn=None,
                                                         scope='fc')
-
         self.output = tf.add(output, 0, name="output")
         self.loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=self.target, logits=self.output)
         self.loss = tf.reduce_mean(self.loss)

@@ -13,7 +13,7 @@ logging.getLogger().setLevel(logging.INFO)
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Run SASRec with GRL.")
+    parser = argparse.ArgumentParser(description="Run SASRec with GSL.")
 
     parser.add_argument('--epoch', type=int, default=30,
                         help='Number of max epochs.')
@@ -95,14 +95,12 @@ class SASRec_GRLnetwork:
                                                scope="self_attention_rec",
                                                # reuse=tf.AUTO_REUSE
                                                )
-
                 # Feed forward
                 self.seq = feedforward(normalize(self.seq), num_units=[self.hidden_size, self.hidden_size],
                                        dropout_rate=args.dropout_rate,
                                        is_training=self.is_training,
                                        scope='fc_rec')
                 self.seq *= mask
-
         self.seq = normalize(self.seq)
         self.state_env = extract_axis_1(self.seq, self.len_state - 1)
 
@@ -134,17 +132,6 @@ class SASRec_GRLnetwork:
                                                scope="self_attention_rl",
                                                # reuse=tf.AUTO_REUSE
                                             )
-
-                # Feed forward
-                # self.seq = feedforward(normalize(self.seq), num_units=[self.hidden_size, self.hidden_size],
-                #                        dropout_rate=args.dropout_rate,
-                #                        is_training=self.is_training)
-
-        # self.stack = normalize(self.stack)
-        """
-        s, t, r = tf.unstack(self.stack, axis=1)
-        self.state_final = tf.add(s, 0, name="state_final")
-        """
         s = tf.layers.dense(tf.transpose(self.stack, [0, 2, 1]), 1, activation=None, name="dense_0")   # with(out) relu
         self.state_final = tf.squeeze(s, axis=-1, name="state_final")
 
@@ -152,7 +139,6 @@ class SASRec_GRLnetwork:
                                                         scope='fc')
 
         self.output = tf.add(output, 0, name="output")
-
         self.loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=self.target, logits=self.output)
         self.loss = tf.reduce_mean(self.loss)
         self.opt = tf.train.AdamOptimizer(self.learning_rate).minimize(self.loss)
