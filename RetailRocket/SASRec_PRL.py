@@ -400,15 +400,10 @@ if __name__ == '__main__':
                 total_step += 1
                 if total_step % 200 == 0:
                     # print("the loss in %dth batch is: %f" % (total_step, loss))
-                    logging.info("the loss in %dth batch is: %f" % (total_step, loss))
-                
-                
-                if total_step % 2000 == 0 or total_step==80:
-                    evaluate(sess, i)
-                    save_file = "./model/SASRec_PRL/epoch_{}_{}".format(i, Time.strftime("%m-%d-%H:%M:%S", Time.localtime()))
-                    saver.save(sess, save_file)
-                
+                    logging.info("the loss in %dth batch is: %f" % (total_step, loss))           
             end_time = Time.time()
             logging.info("the time in %dth epoch is: %f" % (i, end_time - current_time))
             logging.info("the number of parameters is: %d" % np.sum([np.prod(v.get_shape().as_list()) for v in tf.trainable_variables()]))
-
+            evaluate(sess, i)
+            save_file = "./model/SASRec_PRL/epoch_{}_{}".format(i, Time.strftime("%m-%d-%H:%M:%S", Time.localtime()))
+            saver.save(sess, save_file)

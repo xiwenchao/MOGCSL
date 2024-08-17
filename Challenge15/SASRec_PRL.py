@@ -395,7 +395,6 @@ if __name__ == '__main__':
                 if total_step % 200 == 0:
                     # print("the loss in %dth batch is: %f" % (total_step, loss))
                     logging.info("the loss in %dth batch is: %f" % (total_step, loss))
-                if total_step % 2000 == 0 or total_step==80:
-                    evaluate(sess, i)
-                    save_file = "./model/SASRec_PRL/epoch_{}_{}".format(i, Time.strftime("%m-%d-%H:%M:%S", Time.localtime()))
-                    saver.save(sess, save_file)
+            evaluate(sess, i)
+            save_file = "./model/SASRec_PRL/epoch_{}_{}".format(i, Time.strftime("%m-%d-%H:%M:%S", Time.localtime()))
+            saver.save(sess, save_file)
