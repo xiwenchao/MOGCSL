@@ -6,6 +6,8 @@ The code has been tested running under Python 3.7.1. To install the required pac
 ```
 conda create -n GCSL python=3.7.1
 
+conda activate GCSL
+
 pip install torch===1.0.1 torchvision===0.2.2 -f https://download.pytorch.org/whl/torch_stable.html
 
 pip install -r requirements.txt
